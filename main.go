@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gocolly/colly"
 )
@@ -38,15 +39,24 @@ func main() {
 
 	// Praktek
 
-	c.OnHTML(".LyricsHeader__Container-ejidji-1", func(e *colly.HTMLElement){
+	c.OnHTML(".box", func(e *colly.HTMLElement){
+		title := e.ChildText(".title")
 
-		title := e.ChildText("h2.TextLabel-sc-8kw9oj-0.LyricsHeader__Title-ejidji-0")
-		lyric := e.ChildText("div.Lyrics__Container-sc-1ynbvzw-1.kUgSbL")
-		
-		fmt.Printf("Title: %v\nLyrics: %v\n", title, lyric)
+		lyrics := []string{}
+
+		e.ForEach(".lyric", func(_ int,el *colly.HTMLElement){
+			lyric := strings.TrimSpace(el.Text)
+			lyrics = append(lyrics, lyric)
+		})	
+
+		fmt.Printf("Title: %v\n\n", title)
+
+		for _, r := range lyrics{
+			fmt.Printf("%v\n\n", r)
+		}
 	})
 	
-	c.Visit("https://genius.com/Slipknot-psychosocial-2012-remaster-lyrics")
+	c.Visit("https://tomba-hopkins.github.io/belajar-scraping-web-golang/views/")
 
 
 
